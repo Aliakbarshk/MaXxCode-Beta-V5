@@ -93,49 +93,53 @@ export const FloatingBackground = () => {
       {/* 1. UNIVERSAL GRADIENT (Adapts to Theme BG) */}
       <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-primary)]/5 to-transparent opacity-80" />
 
-      {/* 2. FLOATING CODE PARTICLES (Background Texture) */}
-      {[
-        "{ }",
-        "if",
-        "for",
-        "var",
-        "</>",
-        "&&",
-        "||",
-        "=>",
-        "func",
-        "try",
-        "catch",
-        "[]",
-      ].map((char, i) => (
-        <CodeParticle
-          key={i}
-          char={char}
-          top={Math.random() * 80}
-          left={Math.random() * 100}
-          duration={Math.random() * 5 + 3}
-          delay={Math.random() * 5}
-        />
-      ))}
+      {/* 2. FLOATING CODE PARTICLES (Background Texture) - Desktop Only */}
+      <div className="hidden md:block">
+        {[
+          "{ }",
+          "if",
+          "for",
+          "var",
+          "</>",
+          "&&",
+          "||",
+          "=>",
+          "func",
+          "try",
+          "catch",
+          "[]",
+        ].map((char, i) => (
+          <CodeParticle
+            key={i}
+            char={char}
+            top={Math.random() * 80}
+            left={Math.random() * 100}
+            duration={Math.random() * 5 + 3}
+            delay={Math.random() * 5}
+          />
+        ))}
+      </div>
 
-      {/* 3. CLOUDS LAYER (Back) - White in light, faint in dark */}
-      <FloatingProp top={10} left={5} size={1.2} duration={60} delay={0}>
-        <Cloud
-          className="text-[var(--color-text)] opacity-10"
-          size={100}
-          fill="currentColor"
-        />
-      </FloatingProp>
-      <FloatingProp top={25} left={70} size={0.8} duration={80} delay={5}>
-        <Cloud
-          className="text-[var(--color-text)] opacity-5"
-          size={80}
-          fill="currentColor"
-        />
-      </FloatingProp>
+      {/* 3. CLOUDS LAYER (Back) - White in light, faint in dark - Desktop Only */}
+      <div className="hidden md:block">
+        <FloatingProp top={10} left={5} size={1.2} duration={60} delay={0}>
+          <Cloud
+            className="text-[var(--color-text)] opacity-10"
+            size={100}
+            fill="currentColor"
+          />
+        </FloatingProp>
+        <FloatingProp top={25} left={70} size={0.8} duration={80} delay={5}>
+          <Cloud
+            className="text-[var(--color-text)] opacity-5"
+            size={80}
+            fill="currentColor"
+          />
+        </FloatingProp>
+      </div>
 
-      {/* 4. FLOATING TECH ISLANDS (Interactive) */}
-      <div className="absolute inset-0 pointer-events-auto">
+      {/* 4. FLOATING TECH ISLANDS (Interactive) - Desktop Only */}
+      <div className="absolute inset-0 pointer-events-auto hidden md:block">
         {/* Rocket Ship */}
         <FloatingProp
           top={15}
