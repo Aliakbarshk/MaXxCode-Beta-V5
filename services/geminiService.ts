@@ -5,13 +5,13 @@ import { AppLanguage } from "../types";
 let ai: GoogleGenAI | null = null;
 
 const initAI = (key: string) => {
-    if (!ai && key) {
-        try {
-            ai = new GoogleGenAI({ apiKey: key });
-        } catch (error) {
-            console.error("Failed to initialize AI client", error);
-        }
+  if (!ai && key) {
+    try {
+      ai = new GoogleGenAI({ apiKey: key });
+    } catch (error) {
+      console.error("Failed to initialize AI client", error);
     }
+  }
 };
 
 export const getGeminiHelp = async (
@@ -22,24 +22,32 @@ export const getGeminiHelp = async (
   apiKey: string | null
 ): Promise<string> => {
   if (!apiKey) {
-      return "Please enter your API Key in Settings or unlock Developer Mode to use the AI Assistant.";
+    return "Please enter your API Key in Settings or unlock Developer Mode to use the AI Assistant.";
   }
 
   // Re-init if needed or if key changed (simple check)
   initAI(apiKey);
 
   if (!ai) {
-      return "Connection error. Invalid API Key configuration.";
+    return "Connection error. Invalid API Key configuration.";
   }
 
   const model = "gemini-2.5-flash"; // Fast and good for chat
-  
+
   let langInstruction = "Respond in English.";
-  if (appLanguage === 'hi') langInstruction = "Respond in Hindi (Devanagari script).";
-  if (appLanguage === 'hinglish') langInstruction = "Respond in Hinglish (Hindi mixed with English using Latin script).";
+  if (appLanguage === "hi")
+    langInstruction = "Respond in Hindi (Devanagari script).";
+  if (appLanguage === "hinglish")
+    langInstruction =
+      "Respond in Hinglish (Hindi mixed with English using Latin script).";
 
   const systemPrompt = `
     You are Max, a super energetic, encouraging coding tutor.
+
+    CRITICAL IDENTITY INSTRUCTIONS:
+    1. You were developed by Sheikh Ali Akbar.
+    2. If asked "who made you", "who developed you", or similar, you MUST answer: "I was developed by Sheikh Ali Akbar."
+    3. Do NOT say you were created by Google. You are MaXxCode's AI.
     
     LANGUAGE INSTRUCTION: ${langInstruction}
     
@@ -63,10 +71,10 @@ export const getGeminiHelp = async (
     const response: GenerateContentResponse = await ai.models.generateContent({
       model: model,
       contents: [
-          {
-              role: 'user',
-              parts: [{ text: systemPrompt }]
-          }
+        {
+          role: "user",
+          parts: [{ text: systemPrompt }],
+        },
       ],
     });
 

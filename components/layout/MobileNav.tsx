@@ -13,6 +13,7 @@ import {
   Globe,
   Code2,
   ChevronRight,
+  Zap,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { Theme, Translation } from "../../types";
@@ -53,7 +54,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     <button
       onClick={() => (target ? handleNav(target) : setIsMenuOpen(!isMenuOpen))}
       className={clsx(
-        "flex flex-col items-center justify-center p-2 rounded-2xl transition-all active:scale-95 flex-1",
+        "flex flex-col items-center justify-center p-2 rounded-2xl transition-all active:scale-95 flex-1 relative",
         isActive
           ? "text-[var(--color-primary)] font-bold bg-[var(--color-primary)]/10"
           : "text-gray-400 hover:text-gray-600"
@@ -61,6 +62,9 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     >
       <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
       {label && <span className="text-[10px] mt-1 tracking-wide">{label}</span>}
+      {isActive && (
+        <div className="absolute top-1 right-2 w-1.5 h-1.5 bg-[var(--color-primary)] rounded-full animate-pulse" />
+      )}
     </button>
   );
 
@@ -79,23 +83,28 @@ export const MobileNav: React.FC<MobileNavProps> = ({
   }) => (
     <button
       onClick={() => handleNav(target)}
-      className="w-full bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 transition-all active:scale-95 active:bg-gray-50 mb-3"
+      className="w-full bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 transition-all active:scale-95 active:bg-gray-50 mb-3 group"
     >
-      <div className={`p-3 rounded-full ${color} text-white shadow-md`}>
+      <div
+        className={`p-3 rounded-full ${color} text-white shadow-md group-hover:scale-110 transition-transform`}
+      >
         <Icon size={20} />
       </div>
       <div className="text-left flex-1">
         <h3 className="font-bold text-gray-800">{label}</h3>
         <p className="text-xs text-gray-500">{desc}</p>
       </div>
-      <ChevronRight className="text-gray-300" size={18} />
+      <ChevronRight
+        className="text-gray-300 group-hover:text-[var(--color-primary)] transition-colors"
+        size={18}
+      />
     </button>
   );
 
   return (
     <>
       {/* --- SMART BOTTOM BAR --- */}
-      <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-200 p-2 pb-safe flex justify-between items-center sticky bottom-0 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
+      <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-200 p-2 pb-safe flex justify-between items-center sticky bottom-0 z-[60] shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
         <NavItem
           target="dashboard"
           icon={Home}
@@ -127,7 +136,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           className={clsx(
             "flex flex-col items-center justify-center p-2 rounded-2xl transition-all active:scale-95 flex-1",
             isMenuOpen
-              ? "text-[var(--color-primary)] font-bold"
+              ? "text-[var(--color-primary)] font-bold bg-[var(--color-primary)]/10"
               : "text-gray-400"
           )}
         >
@@ -139,7 +148,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
       {/* --- FULL SCREEN MENU OVERLAY --- */}
       <div
         className={clsx(
-          "fixed inset-0 z-50 bg-gray-50/95 backdrop-blur-xl transition-all duration-300 md:hidden flex flex-col",
+          "fixed inset-0 z-[70] bg-gray-50/95 backdrop-blur-xl transition-all duration-300 md:hidden flex flex-col",
           isMenuOpen
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-full pointer-events-none"
@@ -148,7 +157,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
         {/* Menu Header */}
         <div className="p-6 flex items-center justify-between bg-white shadow-sm border-b border-gray-100 pt-safe">
           <div className="flex items-center gap-2">
-            <div className="bg-[var(--color-primary)] p-1.5 rounded-lg">
+            <div className="bg-[var(--color-primary)] p-2 rounded-xl shadow-sm">
               <Code2 className="text-white" size={20} />
             </div>
             <span className="font-black text-xl text-[var(--color-primary)]">
@@ -157,18 +166,21 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           </div>
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="p-2 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200"
+            className="p-2 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200 active:bg-gray-300 transition-colors"
           >
             <X size={24} />
           </button>
         </div>
 
         {/* Menu Content */}
-        <div className="flex-1 overflow-y-auto p-6 pb-32">
+        <div className="flex-1 overflow-y-auto p-6 pb-32 custom-scrollbar">
           {/* User Section */}
-          <div className="mb-6">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">
-              User Zone
+          <div
+            className="mb-6 animate-slide-up"
+            style={{ animationDelay: "0.05s" }}
+          >
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1 flex items-center gap-2">
+              <User size={12} /> User Zone
             </p>
             <MenuOption
               target="profile"
@@ -187,9 +199,12 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           </div>
 
           {/* Learn Section */}
-          <div className="mb-6">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">
-              Knowledge Base
+          <div
+            className="mb-6 animate-slide-up"
+            style={{ animationDelay: "0.1s" }}
+          >
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1 flex items-center gap-2">
+              <Zap size={12} /> Knowledge Base
             </p>
             <MenuOption
               target="leaderboard"
@@ -208,30 +223,33 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           </div>
 
           {/* Developer Section */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <div className="bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] p-[1px] rounded-2xl shadow-lg">
-              <div className="bg-white rounded-2xl p-4">
-                <h4 className="font-black text-lg text-[var(--color-primary)] mb-1 flex items-center gap-2">
-                  <Globe size={18} /> Developer
+          <div
+            className="mt-8 pt-6 border-t border-gray-200 animate-slide-up"
+            style={{ animationDelay: "0.15s" }}
+          >
+            <div className="bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] p-[1px] rounded-2xl shadow-lg transform active:scale-[0.98] transition-transform">
+              <div className="bg-white rounded-2xl p-5">
+                <h4 className="font-black text-lg text-[var(--color-primary)] mb-2 flex items-center gap-2">
+                  <Globe size={20} /> Developer
                 </h4>
-                <p className="text-sm text-gray-600 mb-4">
-                  Built with passion to help you learn coding faster and
-                  smarter.
+                <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                  "I built MaXxCode to make coding accessible and fun for
+                  everyone. Enjoy learning!"
                 </p>
                 <a
                   href="https://myfolioali.netlify.app/"
                   target="_blank"
                   rel="noreferrer"
-                  className="block w-full text-center py-3 rounded-xl bg-[var(--color-primary)] text-white font-bold shadow-md active:scale-95 transition-transform"
+                  className="block w-full text-center py-3 rounded-xl bg-[var(--color-primary)] text-white font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
-                  {t.aboutDev}
+                  {t.aboutDev} <ChevronRight size={16} />
                 </a>
               </div>
             </div>
           </div>
 
           {/* Credit Footer */}
-          <div className="mt-8 text-center opacity-50">
+          <div className="mt-8 text-center opacity-50 pb-8">
             <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-3"></div>
             <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">
               {t.developedBy}
